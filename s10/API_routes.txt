@@ -1,0 +1,310 @@
+openapi: 3.0.1
+info:
+  title: Управление роботом-пылесосом
+  version: 0.1.0
+paths:
+  /connect:
+    post:
+      summary: Подключение робота-пылесоса
+      tags:
+        - Робот
+      operationId: connectRobot
+      requestBody:
+        description: Информация о подключаемом роботе
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RobotConnectionInfo"
+      responses:
+        '200':
+          description: Робот успешно подключен
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RobotConnectionResponse"
+        '400':
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /select-route:
+    post:
+      summary: Выбор маршрута
+      tags:
+        - Робот
+      operationId: selectRoute
+      requestBody:
+        description: Информация о выбранном маршруте
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SelectedRouteInfo"
+      responses:
+        '200':
+          description: Маршрут успешно выбран
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RouteSelectionResponse"
+        '400':
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /schedule-setup:
+    post:
+      summary: Настройка расписания уборок
+      tags:
+        - Робот
+      operationId: setupSchedule
+      requestBody:
+        description: Информация о настраиваемом расписании
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScheduleSetupInfo"
+      responses:
+        '200':
+          description: Расписание успешно настроено
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScheduleSetupResponse"
+        '400':
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /cleaning-history:
+    get:
+      summary: Просмотр истории уборок
+      tags:
+        - Робот
+      operationId: viewCleaningHistory
+      responses:
+        '200':
+          description: Успешный запрос истории уборок
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CleaningHistoryResponse"
+        '400':
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /login:
+    post:
+      summary: Вход в систему
+      tags:
+        - Пользователь
+      operationId: loginUser
+      requestBody:
+        description: Войти
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInfo"
+      responses:
+        '200':
+          description: Вход выполнен успешно
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        '400':
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /register:
+    post:
+      summary: Зарегистрироваться
+      tags:
+        - Пользователь
+      operationId: registerUser
+      requestBody:
+        description: Информация для регистрации
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistrationInfo"
+      responses:
+        '200':
+          description: Регистрация успешно завершена
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegistrationResponse"
+        '400':
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    RobotConnectionInfo:
+      type: object
+      properties:
+        userGroupId:
+          type: integer
+          description: Идентификатор группы пользователей
+        robotId:
+          type: integer
+          description: Идентификатор робота
+        robotName:
+          type: string
+          description: Название робота
+        status:
+          type: string
+          description: Состояние робота
+        schedule:
+          type: integer
+          description: Расписание робота
+
+    RobotConnectionResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Статус подключения
+        message:
+          type: string
+          description: Дополнительное сообщение
+
+    SelectedRouteInfo:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: Идентификатор пользователя
+        routeId:
+          type: integer
+          description: Идентификатор выбранного маршрута
+        routeName:
+          type: string
+          description: Название маршрута
+
+    RouteSelectionResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Статус выбора маршрута
+        message:
+          type: string
+          description: Дополнительное сообщение
+
+    ScheduleSetupInfo:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: Идентификатор пользователя
+        robotId:
+          type: integer
+          description: Идентификатор робота
+        cleaningSchedule:
+          type: array
+          items:
+            type: object
+            properties:
+              datet_time:
+                type: string
+                description: Время уборки
+              route:
+                type: string
+                description: Маршрут уборки
+
+    ScheduleSetupResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Статус настройки расписания
+        message:
+          type: string
+          description: Дополнительное сообщение
+
+    CleaningHistoryResponse:
+      type: object
+      properties:
+        cleaningHistory:
+          type: array
+          items:
+            type: object
+            properties:
+              cleaningId:
+                type: integer
+                description: Идентификатор уборки
+              robotId:
+                type: integer
+                description: Идентификатор робота
+              date:
+                type: string
+                description: Дата и время уборки
+              cleaningRoute:
+                type: string
+                description: Маршрут уборки
+
+    LoginInfo:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Логин пользователя
+        password:
+          type: string
+          description: Пароль пользователя
+
+    LoginResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Статус входа
+        message:
+          type: string
+          description: Дополнительное сообщение
+
+    RegistrationInfo:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Логин пользователя
+        password:
+          type: string
+          description: Пароль пользователя
+
+    RegistrationResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Статус регистрации
+        message:
+          type: string
+          description: Дополнительное сообщение
+
+    Error:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          description: Код ошибки
+        errorMessage:
+          type: string
+          description: Сообщение об ошибке
