@@ -1,0 +1,272 @@
+openapi: 3.0.1
+info:
+  title: Робот-пылесос
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Dev server
+paths:
+  /robots:
+    get:
+      summary: Получение списка роботов
+      responses:
+        '200':
+          description: Список роботов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Robot'
+    post:
+      summary: Создать робота
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Robot'
+      responses:
+        '201':
+          description: Робот успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'
+
+  /robots/{robotId}:
+    get:
+      summary: Получение робота по ID
+      parameters:
+        - name: robotId
+          in: path
+          required: true
+          description: ID запрашиваемого робота
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Запрошенный робот
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'
+        '404':
+          description: Робот не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Обновление робота по ID
+      parameters:
+        - name: robotId
+          in: path
+          required: true
+          description: ID робота для обновления
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Robot'
+      responses:
+        '200':
+          description: Робот успешно обновлён
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'
+        '404':
+          description: Робот не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Удаление робота по ID
+      parameters:
+        - name: robotId
+          in: path
+          required: true
+          description: ID робота для удаления
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Робот успешно удалён
+        '404':
+          description: Робот не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users:
+    get:
+      summary: Получение списка пользователей
+      responses:
+        '200':
+          description: Список пользователей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Создание пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Пользователь успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{userId}:
+    get:
+      summary: Получение пользователя по ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID запрашиваемого пользователя
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Запрошенный пользователь
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Обновление пользователя по ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID пользователя для обновления
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Пользователь успешно обновлён
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Удаление пользователя по ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID пользователя для удаления
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Пользователь успешно удалён
+        '404':
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Robot:
+      type: object
+      required:
+        - id
+        - model
+        - version
+        - fabricNumber
+        - macAddress
+        - idGroupUser
+        - resource
+        - status
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: id робота
+        model:
+          type: string
+          example: AAA3000
+        version:
+          type: string
+          example: 123fff456
+          description: Версия ПО
+        fabricNumber:
+          type: string
+          example: 123qwe456
+        maxAddress:
+          type: string
+        idGroupUser:
+          type: integer
+        resource:
+          type: integer
+          description: Пробег робота
+        status:
+          type: string
+          example: worked
+    User:
+      type: object
+      required:
+        - id
+        - login
+        - hash
+        - email
+      properties:
+        id:
+          type: integer
+          example: 1
+        login:
+          type: string
+        hash:
+          type: string
+        email:
+          type: string
+    Error:
+      type: object
+      required:
+        - errorMessage
+        - errorCode
+      properties:
+        errorMessage:
+          type: string
+        errorCode:
+          type: integer
